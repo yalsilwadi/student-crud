@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Student List</title>
+  </head>
+  <body>
+    <h1>Student List</h1>
+    {{#each students}}
+      <div>
+        <h2>{{name}}</h2>
+        <p>Email: {{email}}</p>
+        <p>Age: {{age}}</p>
+        <img src="{{imageUrl}}" alt="Student Image">
+      </div>
+    {{/each}}
+  </body>
+</html>

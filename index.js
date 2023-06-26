@@ -1,50 +1,32 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const { engine } = require("express-handlebars");
+const studentController = require("./controller/studentController");
+const connectToDB = require("./config/db");
 
 const app = express();
 
-// routes
-// mostly work with JSON at the beginning
+// Connect to MongoDB using Mongoose
+connectToDB();
 
-const students = [
-  {
-    name: "Yasser",
-    email: "y@gmail.com",
-    age: 26,
-    imageUrl:
-      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-];
-// Render home page
+app.use(express.json());
+
+// Configure Handlebars as the view engine
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", "./views");
+
+// Routes
 app.get("/", (req, res) => {
-  res.send("Home page");
-});
-// Show all students
-app.get("/api/students", (req, res) => {
-  res.json(students);
-  //   res.render("students", { students });
+  res.render("home", { title: "Home" });
 });
 
-// Create a student
-app.post("/api/students", (req, res) => {
-    const { name, email, age, imageUrl } = req.body;
-    const newStudent = { name, email, age, imageUrl };
-    students.push(newStudent);
-    res.status(201).json(newStudent);
-  });
-  
-// Edit a student
-app.put("/api/students/:id", (req, res) => {
-    
-  });
+// Mount student routes
+app.get("/students", studentController.getAllStudents);
+app.post("/api/students", studentController.createStudent);
+app.get("/api/students/:id", studentController.getStudentById);
+app.put("/api/students/:id", studentController.updateStudent);
+app.delete("/api/students/:id", studentController.deleteStudent);
 
-// Get a specific student
-app.get("/api/students/:id", (req, res) => {
-    
-  });
-  
-// Delete a student
-app.delete("/api/students/:id", (req, res) => {
-    
-  });
-
+// Start the server
 app.listen(5000, () => console.log("Server running on port 5000"));
